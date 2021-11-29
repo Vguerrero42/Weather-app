@@ -3,10 +3,10 @@
 is a light-weight app that allows a user to get real-time weather information for any city.
 
 
-[Front end challenege according to this mock up](https://hackmd.io/@chimon/frontend-challenge) 
+Front end challenege according to [this mock up](https://hackmd.io/@chimon/frontend-challenge) 
 
 Built using Typescript,React,Chakra UI for the front end and openweather's current weather data api.<br>
-[Hosted on netlify here](https://fourfrontweatherapp.netlify.app/)
+Hosted on netlify [here](https://fourfrontweatherapp.netlify.app/)
 
 Learn more about these technologies below 
 <br>
