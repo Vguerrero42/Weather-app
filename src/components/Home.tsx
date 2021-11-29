@@ -17,7 +17,7 @@ import { getCity } from "../util/index";
 interface Props {
   props?: any;
 }
-const Home: React.FC<Props> = () => {
+const Home: React.FC = () => {
   let [cityName, setCity] = useState("");
   let [isLoading, setIsLoading] = useState(false);
   let [weatherInfo, setWeatherInfo] = useState();
@@ -28,7 +28,7 @@ const Home: React.FC<Props> = () => {
   let toggledTemp = useRef(false);
 
   useEffect(() => {
-    if (weatherInfo && toggledTemp.current) {
+    if (toggledTemp.current && lastSearched.current) {
       //This code allows the dynamic use of onSubmit to handle resubmission of currently searched city but with the appropriate tempUnit when it is toggled between Farenheit and Celsius
       toggledTemp.current = false;
       onSubmit(null, "T");
@@ -41,8 +41,8 @@ const Home: React.FC<Props> = () => {
 
   const onSubmit = async (e?: any, flag?: string) => {
     let cityToSearch = flag === "T" ? lastSearched.current : cityName;
+    if (lastSearched.current !== cityToSearch) setIsLoading(true);
     if (cityToSearch.length > 0) {
-      if (lastSearched.current !== cityToSearch) setIsLoading(true);
       try {
         let res = await getCity(cityToSearch, tempUnit);
         if (res) {
@@ -63,12 +63,12 @@ const Home: React.FC<Props> = () => {
             break;
         }
       }
-      setTimeout(() => setIsLoading(false), 500);
     } else {
       console.log("here");
       invalidSearch.current = true;
       _errorMessage.current = "Please enter a city name";
     }
+    setTimeout(() => setIsLoading(false), 500);
   };
 
   const handleChange = (e: any) => {
@@ -81,7 +81,7 @@ const Home: React.FC<Props> = () => {
     setTempUnit(unit);
   };
 
-  const inputFocus = () => {
+  const inputFocusReset = () => {
     if (invalidSearch.current) {
       invalidSearch.current = false;
       setCity("");
@@ -102,7 +102,7 @@ const Home: React.FC<Props> = () => {
       <Flex>
         <Input
           data-testid="city-name-input"
-          onFocus={inputFocus}
+          onFocus={inputFocusReset}
           aria-label="Input City Name"
           value={cityName}
           focusBorderColor="purple.500"

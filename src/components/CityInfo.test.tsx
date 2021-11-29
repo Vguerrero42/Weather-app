@@ -11,7 +11,6 @@ describe("City Info component tests", () => {
   beforeEach(() => {
     weather = createWeatherObj();
     component = render(<CityInfo weather={weather as Weather} />);
-    console.log("component", component);
   });
 
   afterEach(() => {
