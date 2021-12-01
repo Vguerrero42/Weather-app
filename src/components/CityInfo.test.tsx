@@ -18,17 +18,17 @@ describe("City Info component tests", () => {
   });
 
   it("Renders the city name and country code correctly", () => {
-    let expected = `Weather in ${weather.name}, ${weather.sys.country}`;
-    let h2: any = screen.getByTestId("weather-text").innerHTML;
+    const expected = `Weather in ${weather.name}, ${weather.sys.country}`;
+    const h2: any = screen.getByTestId("weather-text").innerHTML;
     expect(h2).toEqual(expected);
   });
 
   it("Renders correct temp unit", () => {
     //Grabbing text from element that renders temp value and slicing the last element in that string which is always going to be C or F
-    let screenTempUnit = screen
+    const screenTempUnit = screen
       .getByLabelText(/value for Temperature/)
       .innerHTML.slice(-1);
-    let expectedTempUnit = weather.tempUnit === "imperial" ? "F" : "C";
+    const expectedTempUnit = weather.tempUnit === "imperial" ? "F" : "C";
     expect(screenTempUnit).toBe(expectedTempUnit);
   });
 });

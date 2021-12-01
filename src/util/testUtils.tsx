@@ -1,5 +1,3 @@
-import { deg } from ".";
-
 export const testCitiesArr = [
   {
     tempUnit: "imperial",

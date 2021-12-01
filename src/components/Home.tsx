@@ -8,24 +8,25 @@ import {
   Radio,
   Text,
 } from "@chakra-ui/react";
-import { Flex, Heading, Stack } from "@chakra-ui/layout";
+import { Box, Flex, Heading, Stack } from "@chakra-ui/layout";
 import { Search2Icon } from "@chakra-ui/icons";
 
 import { CityInfo } from "./index";
-import { getCity } from "../util/index";
+import { getCity, handleError } from "../util/index";
 
 interface Props {
   props?: any;
 }
 const Home: React.FC = () => {
-  let [cityName, setCity] = useState("");
-  let [isLoading, setIsLoading] = useState(false);
-  let [weatherInfo, setWeatherInfo] = useState();
-  let [tempUnit, setTempUnit] = useState("imperial");
-  let _errorMessage = useRef("");
-  let invalidSearch = useRef(false);
-  let lastSearched = useRef("");
-  let toggledTemp = useRef(false);
+  const [cityName, setCity] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [weatherInfo, setWeatherInfo] = useState();
+  const [tempUnit, setTempUnit] = useState("imperial");
+
+  const _errorMessage = useRef("");
+  const invalidSearch = useRef(false);
+  const lastSearched = useRef("");
+  const toggledTemp = useRef(false);
 
   useEffect(() => {
     if (toggledTemp.current && lastSearched.current) {
@@ -39,44 +40,33 @@ const Home: React.FC = () => {
     setWeatherInfo({ tempUnit: tempUnit, ...val });
   };
 
-  const onSubmit = async (e?: any, flag?: string) => {
-    let cityToSearch = flag === "T" ? lastSearched.current : cityName;
+  const onSubmit = async (e?: null | React.MouseEvent, flag?: string) => {
+    const cityToSearch = flag === "T" ? lastSearched.current : cityName;
     if (lastSearched.current !== cityToSearch) setIsLoading(true);
     if (cityToSearch.length > 0) {
       try {
-        let res = await getCity(cityToSearch, tempUnit);
+        const res = await getCity(cityToSearch, tempUnit);
         if (res) {
           setAndCleanUp(res);
           lastSearched.current = cityToSearch;
         }
       } catch (error: any) {
         invalidSearch.current = true;
-        let uhOh = "Uh-Oh, ";
-        let len = error.message.length;
-        let code = error.message.slice(-3, len);
-        switch (code) {
-          case "404":
-            _errorMessage.current = `${uhOh} \n seems like that city doesnt exist!`;
-            break;
-          default:
-            _errorMessage.current = `${uhOh}\n ${error}`;
-            break;
-        }
+        _errorMessage.current = handleError(error);
       }
     } else {
-      console.log("here");
       invalidSearch.current = true;
       _errorMessage.current = "Please enter a city name";
     }
     setTimeout(() => setIsLoading(false), 500);
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.BaseSyntheticEvent) => {
     setCity(e.target.value);
   };
 
   const toggleTempUnit = (e: any) => {
-    let unit = e === "F" ? "imperial" : "metric";
+    const unit = e === "F" ? "imperial" : "metric";
     toggledTemp.current = true;
     setTempUnit(unit);
   };
@@ -87,7 +77,6 @@ const Home: React.FC = () => {
       setCity("");
     }
   };
-
   return (
     <Flex
       w="70vw"
@@ -96,9 +85,12 @@ const Home: React.FC = () => {
       alignItems="center"
       m="auto"
     >
-      <Heading size="lg" m="6" fontWeight="400">
-        Search your city
-      </Heading>
+      <Box>
+        <Heading size="lg" m="6" fontWeight="400">
+          Search your city
+        </Heading>
+      </Box>
+
       <Flex>
         <Input
           data-testid="city-name-input"
@@ -119,7 +111,13 @@ const Home: React.FC = () => {
       </Flex>
       <Flex m="3" justifyContent="center" direction="column">
         {invalidSearch.current && (
-          <Text color="red" alignSelf="center">
+          <Text
+            p="2"
+            fontWeight="400"
+            fontSize="xl"
+            color="red"
+            alignSelf="center"
+          >
             {_errorMessage.current}
           </Text>
         )}

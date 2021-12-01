@@ -51,3 +51,4 @@ export interface InfoProps {
     value: string | [string, string];
   };
 }
+
