@@ -17,7 +17,8 @@ import { getCity, handleError } from "../util/index";
 interface Props {
   props?: any;
 }
-const Home: React.FC = () => {
+
+const Home: React.FC<Props> = () => {
   const [cityName, setCity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [weatherInfo, setWeatherInfo] = useState();
