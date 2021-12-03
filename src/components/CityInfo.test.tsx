@@ -19,7 +19,7 @@ describe("City Info component tests", () => {
 
   it("Renders the city name and country code correctly", () => {
     const expected = `Weather in ${weather.name}, ${weather.sys.country}`;
-    const h2: any = screen.getByTestId("weather-text").innerHTML;
+    const h2 = screen.getByTestId("weather-text").innerHTML;
     expect(h2).toEqual(expected);
   });
 

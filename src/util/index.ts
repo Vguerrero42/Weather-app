@@ -1,4 +1,5 @@
 import axios from "axios";
+import React from "react";
 
 const weatherAPIKEY = process.env.REACT_APP_WEATHER_API_KEY;
 
@@ -12,8 +13,9 @@ export const getCity = async (cityName: string, tempUnit: string) => {
     }
   } catch (error) {
     console.error(error)
+    return(error)
   }
-  return;
+
 };
 
 export const handleError = (error:Error):string=> {
@@ -32,5 +34,8 @@ export const handleError = (error:Error):string=> {
   return message
 }
 
+const enterKeyHandler = (e:React.KeyboardEvent) =>{
+  return e.key === "Enter"
+}
 
 export const deg = "\u00B0";

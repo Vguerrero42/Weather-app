@@ -29,11 +29,20 @@ const Home: React.FC = () => {
   const toggledTemp = useRef(false);
 
   useEffect(() => {
+    const handleEnterForSearch = (e: KeyboardEvent) => {
+      e.preventDefault();
+      if (e.key === "Enter") onSubmit();
+    };
     if (toggledTemp.current && lastSearched.current) {
       //This code allows the dynamic use of onSubmit to handle resubmission of currently searched city but with the appropriate tempUnit when it is toggled between Farenheit and Celsius
       toggledTemp.current = false;
       onSubmit(null, "T");
     }
+    window.addEventListener("keyup", handleEnterForSearch);
+
+    return () => {
+      window.removeEventListener("keyup", handleEnterForSearch);
+    };
   });
 
   const setAndCleanUp = (val: any) => {
@@ -47,8 +56,8 @@ const Home: React.FC = () => {
       try {
         const res = await getCity(cityToSearch, tempUnit);
         if (res) {
-          setAndCleanUp(res);
           lastSearched.current = cityToSearch;
+          setAndCleanUp(res);
         }
       } catch (error: any) {
         invalidSearch.current = true;
@@ -58,6 +67,7 @@ const Home: React.FC = () => {
       invalidSearch.current = true;
       _errorMessage.current = "Please enter a city name";
     }
+
     setTimeout(() => setIsLoading(false), 500);
   };
 
@@ -94,7 +104,7 @@ const Home: React.FC = () => {
       <Flex>
         <Input
           data-testid="city-name-input"
-          onFocus={inputFocusReset}
+          onClick={inputFocusReset}
           aria-label="Input City Name"
           value={cityName}
           focusBorderColor="purple.500"
@@ -104,7 +114,9 @@ const Home: React.FC = () => {
           type="text"
         ></Input>
         <IconButton
-          aria-label="Search for city"
+          type="submit"
+          // data-testid="submit-button"
+          aria-label="Submit search"
           icon={<Search2Icon />}
           onClick={onSubmit}
         ></IconButton>
@@ -112,6 +124,8 @@ const Home: React.FC = () => {
       <Flex m="3" justifyContent="center" direction="column">
         {invalidSearch.current && (
           <Text
+            data-testid="error-mess"
+            aria-label="error message"
             p="2"
             fontWeight="400"
             fontSize="xl"

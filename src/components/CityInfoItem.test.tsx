@@ -21,5 +21,8 @@ describe("CityInfoItem Tests", () => {
     component.unmount();
   });
 
-  it("Renders label and value of props correctly", () => {});
+  it("Renders label and value of props correctly", () => {
+    expect(testProps.info.label).toBeInTheDocument;
+    expect(testProps.info.value).toBeInTheDocument;
+  });
 });
